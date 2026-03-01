@@ -1,0 +1,136 @@
+#include <behaviors.dtsi>
+#include <dt-bindings/zmk/bt.h>
+#include <dt-bindings/zmk/keys.h>
+#include <dt-bindings/zmk/outputs.h>
+
+#define KEYS_L 0 1 2 3 4 10 11 12 13 14 20 21 22 23 24
+#define KEYS_R 5 6 7 8 9 15 16 17 18 19 25 26 27 28 29
+#define THUMBS 30 31 32 33 34 35
+#define DEF 0
+#define NAV 1
+#define SYM 2
+#define NUM 3
+#define ALT 4
+#define CMD 5
+#define RESET 6
+
+&mt { flavor = "tap-preferred"; };
+
+&lt {
+    flavor = "balanced";
+    tapping-term-ms = <200>;
+    quick-tap-ms = <175>;
+};
+
+/ {
+    behaviors {
+        hml_s: hml_s {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            flavor = "balanced";
+            tapping-term-ms = <2000>;
+            quick-tap-ms = <175>;
+            require-prior-idle-ms = <0>;
+            hold-trigger-key-positions = <KEYS_R THUMBS>;
+            hold-trigger-on-release;
+            bindings = <&kp>, <&kp>;
+        };
+
+        hmr_s: hmr_s {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            flavor = "balanced";
+            tapping-term-ms = <2000>;
+            quick-tap-ms = <175>;
+            require-prior-idle-ms = <0>;
+            hold-trigger-key-positions = <KEYS_L THUMBS>;
+            hold-trigger-on-release;
+            bindings = <&kp>, <&kp>;
+        };
+    };
+
+    combos {
+        compatible = "zmk,combos";
+        timeout-ms = <20>;
+        require-prior-idle-ms = <250>;
+    };
+
+    conditional_layers {
+        compatible = "zmk,conditional-layers";
+
+        num_layer {
+            if-layers = <1 2>;
+            then-layer = <3>;
+        };
+    };
+
+
+    keymap {
+        compatible = "zmk,keymap";
+
+        default_layer {
+            bindings = <
+&kp Q           &kp W            &kp E          &kp R              &kp T  &kp Y  &kp U          &kp I          &kp O            &kp P
+&hml_s LCTRL A  &hml_s LSHIFT S  &hml_s LALT D  &hml_s LEFT_GUI F  &kp G  &kp H  &hmr_s RGUI J  &hmr_s RALT K  &hmr_s RSHIFT L  &hmr_s RCTRL SEMI
+&kp Z           &mt LG(X) X      &mt LG(C) C    &mt LG(V) V        &kp B  &kp N  &kp M          &kp COMMA      &kp DOT          &kp FSLH
+                                 &kp CAPSLOCK   &kp SPACE          &mo 1  &mo 2  &kp RSHIFT     &mo 4
+            >;
+        };
+
+        nav_layer {
+            bindings = <
+&trans         &trans          &trans  &trans  &kp ESC  &kp ESC   &trans    &trans  &kp BSPC   &kp DEL
+&trans         &trans          &trans  &trans  &trans   &kp LEFT  &kp DOWN  &kp UP  &kp RIGHT  &kp RET
+&kp LC(RIGHT)  &kp LC(RIGHT)   &trans  &trans  &trans   &kp TAB   &trans    &trans  &trans     &trans
+                &mo CMD        &trans  &trans  &trans   &trans    &mo RESET
+            >;
+        };
+
+        sym_layer {
+            bindings = <
+&kp N1         &kp N2         &kp N3         &kp N4        &kp N5            &kp N6         &kp N7         &kp N8         &kp N9         &kp N0
+&kp SEMI       &kp RA(GRAVE)  &kp GRAVE      &kp LS(GRAVE) &kp MINUS         &kp PLUS       &trans         &trans         &trans         &trans
+&kp RA(BSLH)   &none          &kp LS(LBKT)   &kp LBKT      &kp UNDER         &kp EQUAL      &kp RBKT       &kp LS(RBKT)   &kp LS(BSLH)   &kp BSLH
+                              &trans         &trans        &trans            &trans         &trans         &trans
+            >;
+        };
+
+        num_layer {
+            bindings = <
+&kp KP_N1      &kp KP_N2      &kp KP_N3      &kp KP_N4     &kp KP_N5         &kp KP_N6      &kp KP_N7      &kp KP_N8        &kp KP_N9      &kp KP_N0
+&trans         &trans         &trans         &trans        &kp F11           &kp F12        &trans         &trans           &trans         &trans
+&kp F1         &kp F2         &kp F3         &kp F4        &kp F5            &kp F6         &kp F7         &kp F8           &kp F9         &kp F10
+                              &trans         &trans        &trans            &trans         &trans         &trans
+            >;
+        };
+
+        alt_layer {
+            bindings = <
+&kp RA(Q)      &kp RA(W)      &kp RA(E)      &kp RA(R)     &kp RA(T)         &kp RA(Y)      &kp RA(U)      &kp RA(I)      &kp RA(O)      &kp RA(P)
+&kp RA(A)      &kp RA(S)      &kp RA(D)      &kp RA(F)     &kp RA(G)         &kp RA(H)      &kp RA(J)      &kp RA(K)      &kp RA(L)      &kp RA(SEMI)
+&kp RA(Z)      &kp RA(X)      &kp RA(C)      &kp RA(V)     &kp RA(B)         &kp RA(N)      &kp RA(M)      &kp RA(COMMA)  &kp RA(DOT)    &kp RA(FSLH)
+                              &trans         &kp NBSP      &kp LSHFT         &trans         &trans         &trans
+                    >;
+        };
+
+        cmd_layer {
+            bindings = <
+&kp LS(LC(LA(Q)))     &kp LS(LC(LA(W)))     &kp LS(LC(LA(E)))     &kp LS(LC(LA(R)))    &kp LS(LC(LA(T)))        &kp LS(LC(LA(Y)))     &kp C_VOL_DN        &kp C_MUTE            &kp C_VOL_UP         &kp LS(LC(LA(P)))
+&kp LS(LC(LA(A)))     &kp LS(LC(LA(S)))     &kp LS(LC(LA(D)))     &kp LS(LC(LA(F)))    &kp LS(LC(LA(G)))        &kp LS(LC(LA(H)))     &kp C_PREV          &kp C_PP              &kp C_NEXT           &kp LS(LC(LA(SEMI)))
+&kp LS(LC(LA(Z)))     &kp LS(LC(LA(X)))     &kp LS(LC(LA(C)))     &kp LS(LC(LA(V)))    &kp LS(LC(LA(B)))        &kp LS(LC(LA(N)))     &kp LS(LC(LA(M)))   &kp LS(LC(LA(COMMA))) &kp LS(LC(LA(DOT)))  &bootloader
+                                            &trans                &trans               &trans                   &kp LGUI              &trans              &trans
+                    >;
+        };
+
+        Reset {
+            bindings = <
+&none         &none         &none         &none         &none         &none         &none         &none         &none         &none
+&bt BT_CLR    &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &bt BT_SEL 3  &bt BT_SEL 2  &bt BT_SEL 1  &bt BT_SEL 0  &bt BT_CLR
+&out OUT_TOG  &none         &none         &none         &none         &none         &none         &none         &none         &out OUT_TOG
+                            &none         &none         &bootloader   &bootloader   &none         &none
+            >;
+        };
+    };
+
+
+};
